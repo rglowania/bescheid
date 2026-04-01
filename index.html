@@ -13,45 +13,40 @@ body {
 }
 .wrap { width: 100%; max-width: 760px; }
 h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
-p.sub { font-size: 14px; color: #666; margin-bottom: 2rem; }
+.subtitle { font-size: 14px; color: #666; margin-bottom: 2rem; }
 
-#dropzone {
-  border: 1.5px dashed #bbb; border-radius: 12px; padding: 3rem 2rem;
-  text-align: center; background: #fff; cursor: pointer;
-  transition: border-color 0.15s, background 0.15s; margin-bottom: 1.5rem;
+.upload-area {
+  background: #fff; border: 1.5px dashed #bbb; border-radius: 12px;
+  padding: 2.5rem; text-align: center; margin-bottom: 1.5rem;
+  transition: border-color 0.15s, background 0.15s;
 }
-#dropzone.over { border-color: #555; background: #f9f9f7; }
-#dropzone .dicon { font-size: 32px; margin-bottom: 10px; }
-#dropzone .dlabel { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-#dropzone .dsub { font-size: 13px; color: #888; }
+.upload-area.over { border-color: #555; background: #f9f9f7; }
+.upload-area .icon { font-size: 32px; margin-bottom: 12px; }
+.upload-area .filename { font-size: 15px; font-weight: 500; margin-bottom: 12px; color: #1a1a18; }
+.upload-area .sub { font-size: 13px; color: #888; margin-bottom: 16px; }
+.upload-btn {
+  display: inline-block; font-size: 14px; padding: 8px 20px;
+  border: 0.5px solid #aaa; border-radius: 7px; background: #f5f5f3;
+  cursor: pointer; color: #1a1a18;
+}
+.upload-btn:hover { background: #eaeae8; }
 
-#status {
-  display: none; align-items: center; gap: 10px;
-  padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 1.5rem;
-}
-#status.loading { display: flex; background: #f0f0ee; color: #555; }
-#status.error { display: flex; background: #fef0f0; color: #b33; border: 0.5px solid #f5c5c5; }
+.status { display: none; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 1.5rem; }
+.status.loading { display: flex; background: #f0f0ee; color: #555; }
+.status.error { display: flex; background: #fef0f0; color: #b33; border: 0.5px solid #f5c5c5; }
 .spinner { width: 16px; height: 16px; border: 2px solid #ccc; border-top-color: #555; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 #output { display: none; }
 .out-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .out-header span { font-size: 14px; font-weight: 500; }
-.btns { display: flex; gap: 8px; }
-.btns button {
-  font-size: 13px; padding: 5px 14px;
-  border: 0.5px solid #ccc; border-radius: 6px;
-  background: #fff; cursor: pointer; color: #333;
-}
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btns button { font-size: 13px; padding: 5px 14px; border: 0.5px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; color: #333; }
 .btns button:hover { background: #f0f0ee; }
 .btns button.primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .btns button.primary:hover { background: #333; }
-textarea {
-  width: 100%; min-height: 420px; padding: 1rem;
-  font-family: inherit; font-size: 14px; line-height: 1.8;
-  border: 0.5px solid #ddd; border-radius: 10px;
-  background: #fff; color: #1a1a18; resize: vertical;
-}
+
+textarea { width: 100%; min-height: 420px; padding: 1rem; font-family: inherit; font-size: 14px; line-height: 1.8; border: 0.5px solid #ddd; border-radius: 10px; background: #fff; color: #1a1a18; resize: vertical; }
 textarea:focus { outline: none; border-color: #aaa; }
 .hint { font-size: 12px; color: #999; margin-top: 6px; }
 
@@ -62,18 +57,23 @@ textarea:focus { outline: none; border-color: #aaa; }
 <body>
 <div class="wrap">
   <h1>Bescheidprüfung</h1>
-  <p class="sub">Bescheidabgleichliste lokal verarbeiten – keine Daten verlassen Ihren Computer</p>
+  <p class="subtitle">Bescheidabgleichliste lokal verarbeiten – keine Daten verlassen Ihren Computer</p>
 
-  <div id="dropzone">
-    <div class="dicon">📄</div>
-    <div class="dlabel" id="dlabel">ESt-Bescheid hier ablegen oder klicken</div>
-    <div class="dsub">Bescheidabgleichliste aus DATEV (PDF oder TIF)</div>
+  <div class="upload-area" id="dropzone">
+    <div class="icon">📄</div>
+    <div class="filename" id="filename">Kein Dokument ausgewählt</div>
+    <div class="sub">Bescheidabgleichliste aus DATEV (PDF oder TIF)</div>
+    <label class="upload-btn">
+      ESt-Bescheid auswählen
+      <input type="file" id="fileInput" accept=".pdf,.tif,.tiff" style="display:none">
+    </label>
   </div>
 
   <div id="clearrow" style="display:none; margin-bottom:1rem;">
     <button onclick="clearAll()" style="font-size:13px; padding:5px 14px; border:0.5px solid #ccc; border-radius:6px; background:#fff; cursor:pointer; color:#333;">Neuen Bescheid einlesen</button>
   </div>
-  <div id="status"></div>
+
+  <div class="status" id="status"></div>
 
   <div id="output">
     <div class="out-header">
@@ -101,47 +101,43 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs
 
 var lastData = null;
 
-// ── Upload via click ──────────────────────────────────────────────────────────
-document.getElementById("dropzone").addEventListener("click", function() {
-  var inp = document.createElement("input");
-  inp.type = "file";
-  inp.accept = ".pdf,.tif,.tiff";
-  inp.onchange = function() { if (inp.files[0]) processFile(inp.files[0]); };
-  inp.click();
+// Datei-Input Change-Event
+document.getElementById("fileInput").addEventListener("change", function() {
+  if (this.files && this.files[0]) processFile(this.files[0]);
 });
 
-// ── Upload via drag & drop ────────────────────────────────────────────────────
+// Drag & Drop
 var dz = document.getElementById("dropzone");
 dz.addEventListener("dragover", function(e) { e.preventDefault(); dz.classList.add("over"); });
 dz.addEventListener("dragleave", function() { dz.classList.remove("over"); });
 dz.addEventListener("drop", function(e) {
-  e.preventDefault(); dz.classList.remove("over");
-  if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+  e.preventDefault();
+  dz.classList.remove("over");
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
 });
 
-// ── Status helpers ────────────────────────────────────────────────────────────
 function setStatus(type, msg) {
   var el = document.getElementById("status");
-  el.className = type;
+  el.className = "status " + type;
   el.innerHTML = type === "loading"
-    ? '<div class="spinner"></div><span>' + msg + '</span>'
-    : '<span>' + msg + '</span>';
+    ? '<div class="spinner"></div><span>' + msg + "</span>"
+    : "<span>" + msg + "</span>";
 }
 function clearStatus() {
   var el = document.getElementById("status");
-  el.className = "";
+  el.className = "status";
   el.style.display = "none";
 }
 
-// ── Main file handler ─────────────────────────────────────────────────────────
 async function processFile(f) {
   var name = f.name.toLowerCase();
   var isPdf = name.endsWith(".pdf");
   var isTif = name.endsWith(".tif") || name.endsWith(".tiff");
   if (!isPdf && !isTif) { setStatus("error", "Bitte eine PDF- oder TIF-Datei hochladen."); return; }
 
-  document.getElementById("dlabel").textContent = f.name;
+  document.getElementById("filename").textContent = f.name;
   document.getElementById("output").style.display = "none";
+  document.getElementById("clearrow").style.display = "none";
   setStatus("loading", "Datei wird geladen…");
 
   try {
@@ -161,8 +157,7 @@ async function processFile(f) {
     var data = parse(text);
     lastData = data;
     document.getElementById("parsedbox").textContent = JSON.stringify(data, null, 2);
-    var schreiben = buildSchreiben(data);
-    document.getElementById("result").value = schreiben;
+    document.getElementById("result").value = buildSchreiben(data);
     document.getElementById("output").style.display = "block";
     document.getElementById("clearrow").style.display = "block";
     clearStatus();
@@ -171,7 +166,6 @@ async function processFile(f) {
   }
 }
 
-// ── PDF text extraction ───────────────────────────────────────────────────────
 async function extractPdfText(f) {
   var buf = await f.arrayBuffer();
   var pdf = await pdfjsLib.getDocument({ data: buf }).promise;
@@ -184,7 +178,6 @@ async function extractPdfText(f) {
   return out;
 }
 
-// ── PDF OCR (render each page to canvas, then Tesseract) ─────────────────────
 async function ocrPdf(f) {
   await loadTesseract();
   var buf = await f.arrayBuffer();
@@ -207,7 +200,6 @@ async function ocrPdf(f) {
   return out;
 }
 
-// ── TIF OCR ──────────────────────────────────────────────────────────────────
 async function ocrTif(f) {
   await loadTesseract();
   var url = URL.createObjectURL(f);
@@ -232,31 +224,24 @@ function loadTesseract() {
   });
 }
 
-// ── Parser ────────────────────────────────────────────────────────────────────
 function n(s) {
   if (!s) return 0;
   s = s.trim();
-  // Deutsches Format: 1.234,56 → Punkte weg, Komma → Punkt
   if (/^\d{1,3}(\.\d{3})*(,\d{1,2})?$/.test(s)) {
     return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
   }
-  // OCR-Fehler: Komma fehlt, z.B. "83443" statt "834,43"
-  // Wenn Zahl > 10000 aber im Kontext max. 4-stellig erwartet: durch 100 teilen
   var raw = parseFloat(s.replace(/[^\d]/g, "")) || 0;
-  // Heuristik: DATEV-Steuerbeträge in dieser Liste sind max. 6-stellig vor Komma
-  // Wenn kein Komma/Punkt vorhanden und > 99999 → wahrscheinlich Centbetrag
   if (!/[,.]/.test(s) && raw > 99999) return raw / 100;
   return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
 }
+
 function fmt(v) {
   return Math.abs(v).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 }
 
 function parse(txt) {
   var d = {};
-  // Normalisieren
   var t = txt.replace(/\r/g, " ").replace(/[ \t]+/g, " ");
-
   var m;
 
   m = t.match(/Mandant[:\s]+\d+\s+([A-ZÄÖÜa-zäöüß\-]+),\s*([A-ZÄÖÜa-zäöüß\-]+)/);
@@ -269,45 +254,33 @@ function parse(txt) {
   m = t.match(/vom[:\s]+(\d{2}\.\d{2}\.\d{4})/);
   d.bescheidDatum = m ? m[1] : "";
 
-  d.vorlaeufig            = /§\s*165\s*AO|teilweise vorläufig/i.test(t);
-  d.vorlaeufigKinder      = /kindbezogenen Freibeträge|Kinderfreibeträge/i.test(t);
-  d.vorlaeufigGrundfrei   = /Grundfreibetrag/i.test(t);
-  d.vorbehalt             = /Vorbehalt der Nachprüfung/i.test(t);
-  // Inhaltliche Vorläufigkeit: Gewinnerzielungsabsicht, bestimmte Einkunftsarten etc.
+  d.vorbehalt = /Vorbehalt der Nachprüfung/i.test(t);
+  d.grenzgaenger = /Schweizer Franken|CHF/i.test(t);
+  d.zusammen = /Ehegatte|Ehefrau|Ehemann|gemeinsam veranlagt/i.test(t);
   d.vorlaeufigInhaltlich = /Gewinnerzielungsabsicht|noch nicht abschließend|vorläufig hinsichtlich der Einkünfte|Einkünfte aus Gewerbebetrieb.*vorläufig|vorläufig.*Einkünfte aus Gewerbebetrieb|Einkünfte aus selbst ?ständiger Arbeit.*vorläufig|vorläufig.*Einkünfte aus selbst ?ständiger Arbeit|freiberuflicher Tätigkeit.*vorläufig|vorläufig.*freiberuflicher Tätigkeit|Vermietung und Verpachtung.*vorläufig|vorläufig.*Vermietung und Verpachtung|Liebhaberei/i.test(t);
-  d.grenzgaenger          = /Schweizer Franken|CHF/i.test(t);
-  d.zusammen              = /Ehegatte|Ehefrau|Ehemann|gemeinsam veranlagt/i.test(t);
-  d.gewerbe               = /Einkünfte aus Gewerbebetrieb/i.test(t);
-  d.selbststaendig        = /freiberuflicher Tätigkeit|selbstständiger Arbeit/i.test(t);
 
-  // Einzelbeträge – erste Zahl nach dem Label = Bescheidwert
-  // Nachzahlungsbeträge: Zeile "Nachzahlung / Erstattung ESt." → erste Zahl = Bescheidwert
   m = t.match(/Nachzahlung\s*\/\s*Erstattung\s+ESt\.?\s+Steuerpfl[^0-9]{0,5}([\d.,]+)/i)
     || t.match(/Nachzahlung\s*\/\s*Erstattung\s+ESt[^0-9]{0,20}([\d.,]+)/i);
   d.estBetrag = m ? n(m[1]) : 0;
 
-  // SolZ: "Nachzahlung / Erstattung Solidaritätszuschlag Steuerpfl." → erste Zahl
   m = t.match(/Nachzahlung\s*\/\s*Erstattung\s+Solidarit[^0-9]{0,20}([\d.,]+)/i);
   d.solzBetrag = m ? n(m[1]) : 0;
 
-  // KiSt: "Nachzahlung / Erstattung KiSt. Steuerpfl." → erste Zahl
   m = t.match(/Nachzahlung\s*\/\s*Erstattung\s+KiSt[^0-9]{0,20}([\d.,]+)/i);
   d.kistBetrag = m ? n(m[1]) : 0;
 
-  // Gesamtbetrag – nimm erste Zahl in der Zeile
-  m = t.match(/Berechnete\s+Gesamt-?Nachzahlung\s*\/\s*Erstattung\s+([\d]+[.,][\d.,]+)\s+([\d]+[.,][\d.,]+)\s+([\d]+[.,][\d.,]+)/i);
+  m = t.match(/Berechnete\s+Gesamt-?Nachzahlung\s*\/\s*Erstattung\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/i);
   if (m) {
-    d.gesamt     = n(m[1]);
+    d.gesamt = n(m[1]);
     d.abweichung = n(m[3]);
-    d.istErstattung = n(m[2]) > n(m[1]); // Erklärung > Bescheid → Erstattung
+    d.istErstattung = n(m[2]) > n(m[1]);
   } else {
-    d.gesamt     = d.estBetrag + d.solzBetrag + d.kistBetrag;
+    d.gesamt = d.estBetrag + d.solzBetrag + d.kistBetrag;
     d.abweichung = 0;
     d.istErstattung = false;
   }
   d.hatAbweichung = d.abweichung > 0.01;
 
-  // Vorauszahlungen: Quartalstermine (03/06/09/12) mit Betrag
   var vzAll = [];
   var re = /(\d{2}\.(03|06|09|12)\.\d{4})[^\n]{0,60}?([\d]{1,3}(?:\.\d{3})*,\d{2})/g;
   var hit;
@@ -320,7 +293,6 @@ function parse(txt) {
   return d;
 }
 
-// ── Schreiben ─────────────────────────────────────────────────────────────────
 function buildSchreiben(d) {
   var L = [];
   var anrede = d.zusammen
@@ -345,7 +317,6 @@ function buildSchreiben(d) {
   if (d.vorbehalt || d.vorlaeufigInhaltlich) {
     L.push("Der Bescheid wurde unter Vorbehalt der Nachprüfung erlassen. Das Finanzamt ist dadurch berechtigt, auch zu einem späteren Zeitpunkt noch Änderungen vorzunehmen.");
   } else {
-    // § 165 AO Vorläufigkeit (Kinderfreibeträge etc.) wird nicht erwähnt → endgültig
     L.push("Der Bescheid wurde vom Finanzamt endgültig festgesetzt. Es kann keine Änderung mehr erfolgen.");
   }
   L.push("");
@@ -368,9 +339,7 @@ function buildSchreiben(d) {
 
   if (d.vorauszahlungen.length > 0) {
     L.push("Ihre neuen Vorauszahlungen:");
-    d.vorauszahlungen.forEach(function(vz) {
-      L.push("  " + vz.datum + ":   " + vz.betrag);
-    });
+    d.vorauszahlungen.forEach(function(vz) { L.push("  " + vz.datum + ":   " + vz.betrag); });
     L.push("");
     if (d.grenzgaenger) {
       L.push("Hinweis zu Ihren Vorauszahlungen: Da Ihr Arbeitslohn in Schweizer Franken ausgezahlt wird, sollten Sie uns informieren, sobald sich Ihr Einkommen oder der Wechselkurs deutlich verändert – wir passen Ihre Vorauszahlungen dann entsprechend an.");
@@ -388,19 +357,16 @@ function buildSchreiben(d) {
   return L.join("\n");
 }
 
-// ── Export ────────────────────────────────────────────────────────────────────
-function doEmail() {
-  var d = lastData || {};
-  var text = document.getElementById("result").value;
-  var subject = encodeURIComponent("Prüfung Ihres Einkommensteuer-Bescheids " + (d.jahr || "2024"));
-  var body = encodeURIComponent(text);
-  // mailto öffnet Outlook Desktop als Standard-E-Mail-Client
-  window.location.href = "mailto:?subject=" + subject + "&body=" + body;
-}
-
-
+function doCopy() {
   navigator.clipboard.writeText(document.getElementById("result").value)
     .then(function() { alert("Text kopiert."); });
+}
+
+function doEmail() {
+  var d = lastData || {};
+  var subject = encodeURIComponent("Prüfung Ihres Einkommensteuer-Bescheids " + (d.jahr || "2024"));
+  var body = encodeURIComponent(document.getElementById("result").value);
+  window.location.href = "mailto:?subject=" + subject + "&body=" + body;
 }
 
 async function doDocx() {
@@ -425,10 +391,10 @@ async function doDocx() {
       return new D.TableCell({
         children: [new D.Paragraph({ children: [new D.TextRun({ text: txt, bold: !!bold, size: 24, font: "Calibri" })] })],
         borders: {
-          top:    { style: D.BorderStyle.SINGLE, size: 1 },
+          top: { style: D.BorderStyle.SINGLE, size: 1 },
           bottom: { style: D.BorderStyle.SINGLE, size: 1 },
-          left:   { style: D.BorderStyle.NONE },
-          right:  { style: D.BorderStyle.NONE }
+          left: { style: D.BorderStyle.NONE },
+          right: { style: D.BorderStyle.NONE }
         }
       });
     };
@@ -437,7 +403,6 @@ async function doDocx() {
     if (d.solzBetrag > 0.01) rows.push(new D.TableRow({ children: [mkCell("Solidaritätszuschlag"), mkCell(fmt(d.solzBetrag))] }));
     rows.push(new D.TableRow({ children: [mkCell(typ + " gesamt", true), mkCell(fmt(d.gesamt), true)] }));
     var tbl = new D.Table({ rows: rows, width: { size: 5000, type: D.WidthType.DXA } });
-    // Nach "Bitte beachten" oder am Ende einfügen
     var idx = -1;
     for (var j = 0; j < children.length; j++) {
       try { if (children[j]._p && children[j]._p.toString().indexOf("Bitte beachten") > -1) { idx = j; break; } } catch(e) {}
@@ -456,7 +421,8 @@ async function doDocx() {
 
 function clearAll() {
   lastData = null;
-  document.getElementById("dlabel").textContent = "ESt-Bescheid hier ablegen oder klicken";
+  document.getElementById("filename").textContent = "Kein Dokument ausgewählt";
+  document.getElementById("fileInput").value = "";
   document.getElementById("output").style.display = "none";
   document.getElementById("clearrow").style.display = "none";
   document.getElementById("rawbox").textContent = "";
@@ -466,7 +432,7 @@ function clearAll() {
   clearStatus();
 }
 
-
+function toggleBox(id) {
   var el = document.getElementById(id);
   el.style.display = el.style.display === "block" ? "none" : "block";
 }
